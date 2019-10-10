@@ -1,0 +1,143 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<style>
+  body {
+    padding: 100px;
+    width: 1000px;
+    margin: auto;
+    text-align: left;
+    font-weight: 300;
+    font-family: 'Open Sans', sans-serif;
+    color: #121212;
+  }
+  h1, h2, h3, h4 {
+    font-family: 'Source Sans Pro', sans-serif;
+  }
+</style>
+<title>CS 184 Mesh Editor</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link href="https://fonts.googleapis.com/css?family=Open+Sans|Source+Sans+Pro" rel="stylesheet">
+</head>
+
+
+<body>
+
+<h1 align="middle">CS 184: Computer Graphics and Imaging, Spring 2019</h1>
+<h1 align="middle">Project 2: Mesh Editor</h1>
+<h2 align="middle">Raymond Ly</h2>
+
+<br><br>
+
+<div>
+
+<h2 align="middle">Overview</h2>
+<p>Give a high-level overview of what you implemented in this project. Think about what you've built as a whole. Share your thoughts on what interesting things you've learned from completing the project.</p>
+
+<h2 align="middle">Section I: Bezier Curves and Surfaces</h2>
+
+<h3 align="middle">Part 1: Bezier curves with 1D de Casteljau subdivision</h3>
+
+<p> de Casteljau's algorithm basically allows us to create Bezier Curves by recursively interpolating points until we evaluate on a single point on timestep, t.
+To implement this, compute intermediate sets of points through linear interpolation until we find the Bezier curve evaluated at timestep t. In effect, we are
+continuously reducing the number of points we have to interpolate from per iteration. </p>
+
+<div align="middle">
+  <table style="width=100%">
+    <tr>
+      <td>
+        <img src="Images/Part1-1.png" align="middle" width="400px"/>
+        <figcaption align="middle">Initial Control Points and First Step</figcaption>
+      </td>
+      <td>
+        <img src="Images/Part1-2.png" align="middle" width="400px"/>
+        <figcaption align="middle">Second Level Interpolation</figcaption>
+      </td>
+    </tr>
+    <br>
+    <tr>
+      <td>
+        <img src="Images/Part1-3.png" align="middle" width="400px"/>
+        <figcaption align="middle">Third Level</figcaption>
+      </td>
+      <td>
+        <img src="Images/Part1-4.png" align="middle" width="400px"/>
+        <figcaption align="middle">Fourth Level</figcaption>
+      </td>
+    </tr>
+    <br>
+    <tr>
+      <td>
+        <img src="Images/Part1-5.png" align="middle" width="400px"/>
+        <figcaption align="middle">Fifth Level</figcaption>
+      </td>
+      <td>
+        <img src="Images/Part1-7.png" align="middle" width="400px"/>
+        <figcaption align="middle">Resulting Bezier Curve.</figcaption>
+      </td>
+    </tr>
+  </table>
+</div>
+
+
+<h3 align="middle">Part 2: Bezier surfaces with separable 1D de Casteljau subdivision</h3>
+
+  <p> Bezier surfaces are effectively created by taking multiple 1D de Casteljau. What was done here was a computation of 4 points using de Casteljau's algorithm from our given set of 16. This gives us a set of Bezier Curves in 2D.
+  From these 4 points, we use another iteration of de Casteljae's algorithm to create a Bezier curve in the 3rd dimension, giving the mesh depth.</p>
+
+  <div align="middle">
+    <table style="width=100%">
+      <tr>
+        <td>
+          <img src="Images/Part2.png" align="middle" width="400px"/>
+          <figcaption align="middle"></figcaption>
+        </td>
+      </tr>
+      </table>
+  </div>
+
+<h2 align="middle">Section II: Sampling</h2>
+
+<h3 align="middle">Part 3: Average normals for half-edge meshes</h3>
+
+  <p>To find the average normal of our mesh, we consider each triangle in the mesh. By iterating through each halfedge, we take the cross product of two legs of a triangle and accumulate it into a global normal vector, n.
+  This way, we are accounting for and computing the normal vector for every single triangle in the given mesh. The accumulated vector, n, is then normalized to a unit vector, giving us a
+  smoothed surface. </p>
+
+  <div align="middle">
+    <table style="width=100%">
+      <tr>
+        <td>
+          <img src="Images/Part3-1.png" align="middle" width="400px"/>
+          <figcaption align="middle">Before smoothed normals.</figcaption>
+        </td>
+        <td>
+          <img src="Images/Part3-2.png" align="middle" width="400px"/>
+          <figcaption align="middle">After smoothed normals.</figcaption>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+
+<h3 align="middle">Part 4: Half-edge flip</h3>
+  <p> To flip a half edge, one has to consider all the affected edges, halfedges, vertices, and faces. This can be done by
+  rotation, so long as the labeling and consideration for these elements is kept consistent. What I attempted to do was to
+  take the given edge and rotate it, setting corresponding elements of the flipped edge to their respective new destinations (i.e.
+  changing the "next" halfedge, the orifinating vertex, the appropriate twin, and corresponding face, if necessary. Unfortunately,
+  as far as debugging goes, the algorithm I have written causes Segmentation Faults, although the logic and concept of flipping edges
+  is understood. </p>
+
+
+<h3 align="middle">Part 5: Half-edge split</h3>
+
+
+<h3 align="middle">Part 6: Loop subdivision for mesh upsampling</h3>
+
+<h2 align="middle">Section III: Mesh Competition</h2>
+<p>If you are not participating in the optional mesh competition, don't worry about this section!</p>
+
+<h3 align="middle">Part 7: Design your own mesh!</h3>
+
+</body>
+</html>
